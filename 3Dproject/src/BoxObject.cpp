@@ -1,9 +1,5 @@
 #include "BoxObject.h"
-#include <iostream>
-#include "glad/glad.h"
-#include "../glm/glm.hpp"
-#include "../glm/gtc/matrix_transform.hpp"
-#include "../glm/gtc/type_ptr.hpp"
+#include "Base.h"
 extern glm::mat4x4 _viewMatrix;
 extern glm::mat4x4 _projectMatrix;
 unsigned int BoxObject::CreateVAO()
@@ -93,7 +89,7 @@ BoxObject::BoxObject(float d, float w, float h)
 		"} \n";
 	m_shader.CompileShader(vertexShaderSource, fragmentShader);
 }
-void BoxObject::Draw()
+void BoxObject::Render()
 {
 	glUseProgram(m_shader.getProgram());
 	glBindVertexArray(VAO);

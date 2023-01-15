@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BoxObject.cpp" />
+    <ClCompile Include="src\CubeMap.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\imgui\imgui.cpp" />
     <ClCompile Include="src\imgui\imgui_demo.cpp" />
@@ -33,7 +34,9 @@
     <ClCompile Include="src\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Base.h" />
     <ClInclude Include="include\BoxObject.h" />
+    <ClInclude Include="include\CubeMap.h" />
     <ClInclude Include="include\DrawObject.h" />
     <ClInclude Include="include\GLFW\glfw3.h" />
     <ClInclude Include="include\imconfig.h" />
@@ -47,6 +50,7 @@
     <ClInclude Include="include\imstb_truetype.h" />
     <ClInclude Include="include\MainGui.h" />
     <ClInclude Include="include\shader.h" />
+    <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\WindowBase.h" />
   </ItemGroup>
   <ItemGroup>

@@ -6,12 +6,9 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include <stdio.h>
-#include "glad/glad.h"
-#include <iostream>
 #include "BoxObject.h"
-#include "../glm/glm.hpp"
-#include "../glm/gtc/matrix_transform.hpp"
+#include "Base.h"
+#include "CubeMap.h"
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
@@ -26,6 +23,8 @@
 #endif
 glm::mat4x4 _viewMatrix;
 glm::mat4x4 _projectMatrix;
+CubeMap gCubeMap;
+unsigned int cubemapID;
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
@@ -37,12 +36,13 @@ void MainWndRender(const MainGui& Gui)
 	case eCreateBox:
 	{
 		BoxObject box(10, 10, 10);
-		box.Draw();
+		box.Render();
 	}
 	default:
 		break;
 	}
 }
+
 int main(int, char**)
 {
     // Setup window
@@ -100,7 +100,7 @@ int main(int, char**)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-
+	gCubeMap.initCubeMap();
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 	MainGui mainGui("main");
     // Main loop
@@ -113,6 +113,16 @@ int main(int, char**)
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+	    glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		static float fRotAngle = 0.0f;
+		fRotAngle += 0.5f;
+		_viewMatrix = glm::rotate(viewMatrix,glm::radians(fRotAngle), glm::vec3(0.0f, 1.0f, 0.0f));
+		_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 100.0f);
+		
+		gCubeMap.Render();
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -124,11 +134,7 @@ int main(int, char**)
 
 		// Rendering
 		ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-	    _viewMatrix = glm::lookAt(glm::vec3(3.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 100.0f);
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		MainWndRender(mainGui);
         glfwSwapBuffers(window);
 		glfwPollEvents();

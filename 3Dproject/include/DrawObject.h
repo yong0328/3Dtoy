@@ -1,4 +1,5 @@
 #pragma once
+#include "shader.h"
 class BaseObj
 {
 public:
@@ -14,9 +15,12 @@ public:
 		uuid = generatoruuid();
 	}
 public:
-	virtual void Draw() = 0;
+	virtual void Render() = 0;
 private:
 	long long generatoruuid() { return 0; }
-private:
+
+protected:
 	long long uuid = 0;
+	unsigned int VAO;
+	shader m_shader;
 };
