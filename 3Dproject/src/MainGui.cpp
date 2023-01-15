@@ -1,17 +1,18 @@
 #include "MainGui.h"
 #include "imgui.h"
-#include "BoxObject.h"
+
 void MainGui::show()
 {
 	ImGui::Begin(m_strname.c_str());                      
 
 	if (ImGui::Button("Box"))
-	{
-		BoxObject box(10,10,10);
-		box.Draw();
-	}
+		m_eBtnType = eCreateBox;
 	if (ImGui::Button("Sphere"))
-
+		m_eBtnType = eCreateSphere;
+	if (ImGui::Button("Sphere"))
+		m_eBtnType = eCreateSphere;
+	if (ImGui::Button("Clear"))
+		m_eBtnType = eClear;
 	ImGui::SameLine();
 	ImGui::End();
 }
