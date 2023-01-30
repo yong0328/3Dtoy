@@ -1,13 +1,14 @@
 #pragma once
 #include "Base.h"
 #include <vector>
+
 class Line
 {
 public:
 	Line() {}
 	virtual~Line() {}
+	virtual void Render() = 0;
 protected:
-	std::vector<Point3D> m_vPt;
 	unsigned int VAO;
 	shader m_shader;
 };

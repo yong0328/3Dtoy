@@ -8,6 +8,7 @@
 #include "stb_image.h"
 #include "../glm/gtc/type_ptr.hpp"
 #include "shader.h"
+#include <memory>
 enum SHOWMODE
 {
 	SHOW2D = 0,
@@ -15,10 +16,14 @@ enum SHOWMODE
 };
 struct Point2D
 {
-	float x;
-	float y;
+public:
+	Point2D(float x = 0.0f,float y = 0.0f) : m_x(x),m_y(y) {}
+	float m_x;
+	float m_y;
 };
 struct Point3D: public Point2D
 {
-	float z;
+public:
+	Point3D(float x = 0.0f, float y = 0.0f,float z = 0.0f) :Point2D(x,y),m_z(z) {}
+	float m_z;
 };

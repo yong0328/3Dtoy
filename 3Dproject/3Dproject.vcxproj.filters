@@ -63,7 +63,7 @@
     <ClCompile Include="src\CubeMap.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\BizierCurve.cpp">
+    <ClCompile Include="src\BezierCurve.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

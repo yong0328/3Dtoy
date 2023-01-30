@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BizierCurve.cpp" />
+    <ClCompile Include="src\BezierCurve.cpp" />
     <ClCompile Include="src\BoxObject.cpp" />
     <ClCompile Include="src\CubeMap.cpp" />
     <ClCompile Include="src\glad.c" />

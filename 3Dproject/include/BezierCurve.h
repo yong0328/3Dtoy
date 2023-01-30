@@ -1,12 +1,12 @@
 #pragma once
 #include "Line.h"
-
-class BizierCurve : public Line
+extern std::vector<Point3D> _vPt;
+class BezierCurve : public Line
 {
 public:
-	BizierCurve();
-	~BizierCurve();
-
+	BezierCurve();
+	~BezierCurve();
+	virtual void Render() override;
 private:
 
 };

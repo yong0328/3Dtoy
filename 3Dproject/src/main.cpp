@@ -15,6 +15,8 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 #include "MainGui.h"
+#include "Line.h"
+#include "BezierCurve.h"
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
@@ -27,16 +29,32 @@ glm::mat4x4 _viewMatrix;
 glm::mat4x4 _projectMatrix;
 CubeMap gCubeMap;
 unsigned int cubemapID;
+//std::vector<Point3D> _vPt = { Point3D(100.0f,100.0f,0.0f),
+//							  Point3D(300.0f,300.0f,0.0f),
+//							  Point3D(600.0f,100.0f,0.0f) };
+std::vector<Point3D> _vPt = { Point3D(-0.5f,-0.5f,0.0f),
+							  Point3D(0.0f,0.5f,0.0f),
+							  Point3D(0.5f,0.5f,0.0f) };
+
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
+//std::shared_ptr<Line> m_DrawLine = nullptr;
 void MainWndRender(const MainGui& Gui)
 {
-
 	if (curShowMode == SHOW2D)
 	{
-
+		switch (Gui.m_eBtnType2D)
+		{
+		case eBizierCurve:
+		{
+			BezierCurve line;
+			line.Render();
+		}
+		default:
+			break;
+		}
 	}
 	else
 	{
@@ -111,7 +129,8 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Init(glsl_version);
 
 	gCubeMap.initCubeMap();
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    //ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
 	MainGui mainGui("Function list");
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -137,14 +156,16 @@ int main(int, char**)
 		//_viewMatrix = glm::rotate(viewMatrix,glm::radians(fRotAngle), glm::vec3(0.0f, 1.0f, 0.0f));
 		if (curShowMode == SHOWMODE::SHOW2D)
 		{
-			_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 200.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-			_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 100.0f);
+			//_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 200.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			//_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 1000.0f);
+			_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 1000.0f);
 			
 		}
 		else
 		{
 			_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 100.0f);
+			_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 1000.0f);
 
 			gCubeMap.Render();
 		}
