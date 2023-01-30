@@ -7,3 +7,18 @@
 #include <vector>
 #include "stb_image.h"
 #include "../glm/gtc/type_ptr.hpp"
+#include "shader.h"
+enum SHOWMODE
+{
+	SHOW2D = 0,
+	SHOW3D
+};
+struct Point2D
+{
+	float x;
+	float y;
+};
+struct Point3D: public Point2D
+{
+	float z;
+};

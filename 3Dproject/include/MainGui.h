@@ -1,6 +1,8 @@
 #pragma once
 #include "WindowBase.h"
-enum ButtonType
+#include "Base.h"
+extern SHOWMODE curShowMode;
+enum ButtonType3D
 {
 	eNone,
 	eCreateBox,
@@ -8,10 +10,17 @@ enum ButtonType
 
 	eClear,
 };
+enum ButtonType2D
+{
+	eNone2D,
+	eBizierCurve,
+	eBspline,
+	eNurbs,
+};
 class MainGui : public WindowBase
 {
 public:
-	MainGui(std::string name) : WindowBase(name),m_eBtnType(eNone)
+	MainGui(std::string name) : WindowBase(name), m_eBtnType3D(eNone),m_eBtnType2D(eNone2D)
 	{
 		
 	}
@@ -24,5 +33,6 @@ public:
 	MainGui& operator=(const MainGui&) = delete;
 
 public:
-	ButtonType m_eBtnType;
+	ButtonType2D m_eBtnType2D;
+	ButtonType3D m_eBtnType3D;
 };

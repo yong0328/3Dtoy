@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BizierCurve.cpp" />
     <ClCompile Include="src\BoxObject.cpp" />
     <ClCompile Include="src\CubeMap.cpp" />
     <ClCompile Include="src\glad.c" />
@@ -35,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Base.h" />
+    <ClInclude Include="include\BezierCurve.h" />
     <ClInclude Include="include\BoxObject.h" />
     <ClInclude Include="include\CubeMap.h" />
     <ClInclude Include="include\DrawObject.h" />
@@ -48,6 +50,7 @@
     <ClInclude Include="include\imstb_rectpack.h" />
     <ClInclude Include="include\imstb_textedit.h" />
     <ClInclude Include="include\imstb_truetype.h" />
+    <ClInclude Include="include\Line.h" />
     <ClInclude Include="include\MainGui.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\stb_image.h" />
@@ -108,7 +111,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\gitProj\3Dtoy\3Dproject\include\glad;D:\gitProj\3Dtoy\3Dproject\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\gitProj\3Dtoy\3Dproject\include\glad;D:\gitProj\3Dtoy\3Dproject\include;D:\imgui\3Dproject\3Dproject\include\glad;D:\imgui\3Dproject\3Dproject\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,7 +122,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>D:\gitProj\3Dtoy\3Dproject\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\gitProj\3Dtoy\3Dproject\lib;D:\imgui\3Dproject\3Dproject\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>

@@ -21,6 +21,8 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
+
+SHOWMODE curShowMode = SHOWMODE::SHOW3D;
 glm::mat4x4 _viewMatrix;
 glm::mat4x4 _projectMatrix;
 CubeMap gCubeMap;
@@ -31,15 +33,23 @@ static void glfw_error_callback(int error, const char* description)
 }
 void MainWndRender(const MainGui& Gui)
 {
-	switch (Gui.m_eBtnType)
+
+	if (curShowMode == SHOW2D)
 	{
-	case eCreateBox:
-	{
-		BoxObject box(10, 10, 10);
-		box.Render();
+
 	}
-	default:
-		break;
+	else
+	{
+		switch (Gui.m_eBtnType3D)
+		{
+		case eCreateBox:
+		{
+			BoxObject box(10, 10, 10);
+			box.Render();
+		}
+		default:
+			break;
+		}
 	}
 }
 
@@ -102,7 +112,7 @@ int main(int, char**)
 
 	gCubeMap.initCubeMap();
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	MainGui mainGui("main");
+	MainGui mainGui("Function list");
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -116,26 +126,44 @@ int main(int, char**)
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-	    glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		static float fRotAngle = 0.0f;
-		fRotAngle += 0.5f;
-		_viewMatrix = glm::rotate(viewMatrix,glm::radians(fRotAngle), glm::vec3(0.0f, 1.0f, 0.0f));
-		_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 100.0f);
-		
-		gCubeMap.Render();
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
-
 		ImGui::NewFrame();
+		
+	    //glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		//static float fRotAngle = 0.0f;
+		//fRotAngle += 0.5f;
+		//_viewMatrix = glm::rotate(viewMatrix,glm::radians(fRotAngle), glm::vec3(0.0f, 1.0f, 0.0f));
+		if (curShowMode == SHOWMODE::SHOW2D)
 		{
-			mainGui.show();
+			_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 200.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+			_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 100.0f);
+			
 		}
+		else
+		{
+			_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 100.0f);
 
+			gCubeMap.Render();
+		}
+		mainGui.show();
 		// Rendering
+		MainWndRender(mainGui);
+		const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 1100, main_viewport->WorkPos.y + 10), ImGuiCond_Always);
+		ImGui::SetNextWindowSize(ImVec2(150, 55), ImGuiCond_Always);
+		ImGui::Begin("Show Mode Select");
+		if (ImGui::Button("2D"))
+			curShowMode = SHOWMODE::SHOW2D;
+		ImGui::SameLine();
+		if (ImGui::Button("3D"))
+			curShowMode = SHOWMODE::SHOW3D;
+		ImGui::SameLine();
+		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		MainWndRender(mainGui);
         glfwSwapBuffers(window);
 		glfwPollEvents();
     }

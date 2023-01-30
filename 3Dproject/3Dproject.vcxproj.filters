@@ -63,6 +63,9 @@
     <ClCompile Include="src\CubeMap.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\BizierCurve.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\imconfig.h">
@@ -117,6 +120,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\CubeMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Line.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BezierCurve.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
