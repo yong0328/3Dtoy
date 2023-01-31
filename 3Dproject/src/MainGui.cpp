@@ -19,6 +19,8 @@ void MainGui::show()
 		if (ImGui::Button("NUBRS curve"))
 			m_eBtnType2D = eNurbs;
 			//std::cout << "Draw NUBRS curve" << std::endl;
+		if (ImGui::Button("Clear"))
+			_vPt.clear();
 	}
 	else
 	{

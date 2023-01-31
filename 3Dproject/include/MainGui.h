@@ -2,6 +2,8 @@
 #include "WindowBase.h"
 #include "Base.h"
 extern SHOWMODE curShowMode;
+extern std::vector<Point3D> _vPt;
+
 enum ButtonType3D
 {
 	eNone,
@@ -17,10 +19,12 @@ enum ButtonType2D
 	eBspline,
 	eNurbs,
 };
+extern ButtonType2D m_eBtnType2D;
+extern ButtonType3D m_eBtnType3D;
 class MainGui : public WindowBase
 {
 public:
-	MainGui(std::string name) : WindowBase(name), m_eBtnType3D(eNone),m_eBtnType2D(eNone2D)
+	MainGui(std::string name) : WindowBase(name)
 	{
 		
 	}
@@ -33,6 +37,4 @@ public:
 	MainGui& operator=(const MainGui&) = delete;
 
 public:
-	ButtonType2D m_eBtnType2D;
-	ButtonType3D m_eBtnType3D;
 };

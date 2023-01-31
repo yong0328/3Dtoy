@@ -29,12 +29,9 @@ glm::mat4x4 _viewMatrix;
 glm::mat4x4 _projectMatrix;
 CubeMap gCubeMap;
 unsigned int cubemapID;
-//std::vector<Point3D> _vPt = { Point3D(100.0f,100.0f,0.0f),
-//							  Point3D(300.0f,300.0f,0.0f),
-//							  Point3D(600.0f,100.0f,0.0f) };
-std::vector<Point3D> _vPt = { Point3D(-0.5f,-0.5f,0.0f),
-							  Point3D(0.0f,0.5f,0.0f),
-							  Point3D(0.5f,0.5f,0.0f) };
+ButtonType2D m_eBtnType2D;
+ButtonType3D m_eBtnType3D;
+std::vector<Point3D> _vPt;
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -45,11 +42,11 @@ void MainWndRender(const MainGui& Gui)
 {
 	if (curShowMode == SHOW2D)
 	{
-		switch (Gui.m_eBtnType2D)
+		switch (m_eBtnType2D)
 		{
 		case eBizierCurve:
 		{
-			BezierCurve line;
+			static BezierCurve line;
 			line.Render();
 		}
 		default:
@@ -58,11 +55,11 @@ void MainWndRender(const MainGui& Gui)
 	}
 	else
 	{
-		switch (Gui.m_eBtnType3D)
+		switch (m_eBtnType3D)
 		{
 		case eCreateBox:
 		{
-			BoxObject box(10, 10, 10);
+			static BoxObject box(10, 10, 10);
 			box.Render();
 		}
 		default:
@@ -70,7 +67,38 @@ void MainWndRender(const MainGui& Gui)
 		}
 	}
 }
+void processMouseInput(GLFWwindow* window, int button, int action, int mods)
+{
+	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+	if (main_viewport == nullptr)
+		return;
+	if (curShowMode == SHOWMODE::SHOW2D)
+	{
+		if (m_eBtnType2D == ButtonType2D::eBizierCurve)
+		{
+			if (action == GLFW_PRESS)
+			{
+				if (button == GLFW_MOUSE_BUTTON_LEFT)
+				{
+					double xpos = 0.0;
+					double ypos = 0.0;
+					glfwGetCursorPos(window, &xpos, &ypos);
+					double localXpos = xpos - main_viewport->WorkPos.x;
+					double localYpos = main_viewport->WorkSize.y - ypos + main_viewport->WorkPos.y;
+					double projectionXPos = localXpos * 2 / main_viewport->WorkSize.x - 1;
+					double projectionYPos = localYpos * 2 / main_viewport->WorkSize.y - 1;
+					glm::mat4x4 inverViewMat = glm::inverse(_viewMatrix);
+					glm::mat4x4 inverProjMat = glm::inverse(_projectMatrix);
+					glm::vec4 projpos(projectionXPos,projectionYPos, 0.5,1.0);
+					glm::vec4 pos =  inverViewMat* inverProjMat* projpos;
+					_vPt.push_back(Point3D(pos.x / pos.w, pos.y / pos.w, pos.z / pos.w));
+				}
+			}
+		}
 
+	}
+	
+}
 int main(int, char**)
 {
     // Setup window
@@ -101,12 +129,12 @@ int main(int, char**)
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
-
     // Create window with graphics context
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
     if (window == NULL)
         return 1;
     glfwMakeContextCurrent(window);
+	glfwSetMouseButtonCallback(window, processMouseInput);
     glfwSwapInterval(1); // Enable vsync
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -158,13 +186,13 @@ int main(int, char**)
 		{
 			//_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 200.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			//_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 1000.0f);
-			_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 1000.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 1000.0f);
 			
 		}
 		else
 		{
-			_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			_viewMatrix = glm::lookAt(glm::vec3(3.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 1000.0f);
 
 			gCubeMap.Render();

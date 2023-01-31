@@ -8,5 +8,6 @@ public:
 	~BezierCurve();
 	virtual void Render() override;
 private:
-
+	std::vector<Point3D> drawpt;
+	int m_iPtNum;
 };

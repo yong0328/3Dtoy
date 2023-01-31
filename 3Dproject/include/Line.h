@@ -5,10 +5,14 @@
 class Line
 {
 public:
-	Line() {}
+	Line() : nodeVAO(0),controlVAO(0) {}
 	virtual~Line() {}
 	virtual void Render() = 0;
 protected:
-	unsigned int VAO;
+	unsigned int nodeVAO;
+	unsigned int controlVAO;
+
+	unsigned int nodeVBO;
+	unsigned int controlVBO;
 	shader m_shader;
 };
