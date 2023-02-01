@@ -66,6 +66,15 @@
     <ClCompile Include="src\BezierCurve.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\Bspline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_mesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\imconfig.h">
@@ -126,6 +135,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\BezierCurve.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Bspline.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\_mesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

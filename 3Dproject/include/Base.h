@@ -9,6 +9,7 @@
 #include "../glm/gtc/type_ptr.hpp"
 #include "shader.h"
 #include <memory>
+#include <string>
 enum SHOWMODE
 {
 	SHOW2D = 0,
