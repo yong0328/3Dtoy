@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BoxObject.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CubeMap.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\imgui\imgui.cpp" />
@@ -36,6 +37,7 @@
   <ItemGroup>
     <ClInclude Include="include\Base.h" />
     <ClInclude Include="include\BoxObject.h" />
+    <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\CubeMap.h" />
     <ClInclude Include="include\DrawObject.h" />
     <ClInclude Include="include\GLFW\glfw3.h" />

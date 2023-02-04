@@ -1,7 +1,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "CubeMap.h"
-
-extern glm::mat4x4 _viewMatrix;
+#include "Camera.h"
+extern Camera _camera;
 extern glm::mat4x4 _projectMatrix;
 CubeMap::CubeMap()
 {
@@ -130,7 +130,7 @@ void CubeMap::Render()
 	glDepthFunc(GL_LEQUAL);
 	glUseProgram(m_shader.getProgram());
 	glBindVertexArray(VAO);
-	glm::mat4 viewMtx = glm::mat4(glm::mat3(_viewMatrix));
+	glm::mat4 viewMtx = glm::mat4(glm::mat3(_camera.getMatrix()));
 	glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgram(), "_viewMatrix"), 1, GL_FALSE, glm::value_ptr(viewMtx));
 	glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgram(), "_projectMatrix"), 1, GL_FALSE, glm::value_ptr(_projectMatrix));
 	glDrawArrays(GL_TRIANGLES, 0, 36);

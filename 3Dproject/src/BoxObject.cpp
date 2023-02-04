@@ -1,6 +1,7 @@
 #include "BoxObject.h"
 #include "Base.h"
-extern glm::mat4x4 _viewMatrix;
+#include "Camera.h"
+extern Camera _camera;
 extern glm::mat4x4 _projectMatrix;
 unsigned int BoxObject::CreateVAO()
 {
@@ -93,7 +94,7 @@ void BoxObject::Render()
 {
 	glUseProgram(m_shader.getProgram());
 	glBindVertexArray(VAO);
-	glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgram(), "_viewMatrix"), 1, GL_FALSE, glm::value_ptr(_viewMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgram(), "_viewMatrix"), 1, GL_FALSE, glm::value_ptr(_camera.getMatrix()));
 	glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgram(), "_projectMatrix"), 1, GL_FALSE, glm::value_ptr(_projectMatrix));
 	glDrawArrays(GL_TRIANGLES,0,36);
 	glUseProgram(0);
