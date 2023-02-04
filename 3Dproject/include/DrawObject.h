@@ -1,5 +1,5 @@
 #pragma once
-#include "shader.h"
+#include "Base.h"
 class BaseObj
 {
 public:

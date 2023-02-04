@@ -19,8 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BoxObject.cpp" />
+    <ClCompile Include="src\BezierCurve.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\BoxObject.cpp" />
+    <ClCompile Include="src\Bspline.cpp" />
     <ClCompile Include="src\CubeMap.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\imgui\imgui.cpp" />
@@ -32,12 +34,16 @@
     <ClCompile Include="src\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainGui.cpp" />
+    <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\_mesh.cpp" />
     <ClCompile Include="src\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Base.h" />
-    <ClInclude Include="include\BoxObject.h" />
+    <ClInclude Include="include\BezierCurve.h" />
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\Bspline.h" />
+    <ClInclude Include="include\BoxObject.h" />
     <ClInclude Include="include\CubeMap.h" />
     <ClInclude Include="include\DrawObject.h" />
     <ClInclude Include="include\GLFW\glfw3.h" />
@@ -50,7 +56,10 @@
     <ClInclude Include="include\imstb_rectpack.h" />
     <ClInclude Include="include\imstb_textedit.h" />
     <ClInclude Include="include\imstb_truetype.h" />
+    <ClInclude Include="include\Line.h" />
     <ClInclude Include="include\MainGui.h" />
+    <ClInclude Include="include\Model.h" />
+    <ClInclude Include="include\_mesh.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\WindowBase.h" />
@@ -110,7 +119,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\gitProj\3Dtoy\3Dproject\include\glad;D:\gitProj\3Dtoy\3Dproject\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(MSBuildProjectDirectory)\include\glad;$(MSBuildProjectDirectory)\include\assimp;$(MSBuildProjectDirectory)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,8 +130,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>D:\gitProj\3Dtoy\3Dproject\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MSBuildProjectDirectory)\dll;$(MSBuildProjectDirectory)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

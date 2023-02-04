@@ -15,6 +15,8 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 #include "MainGui.h"
+#include "Line.h"
+#include "BezierCurve.h"
 #include "Camera.h"
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -22,60 +24,46 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
+SHOWMODE curShowMode = SHOWMODE::SHOW3D;
+glm::mat4x4 _viewMatrix;
 glm::mat4x4 _projectMatrix;
 //skybox
 CubeMap gCubeMap;
 unsigned int cubemapID;
-
-Camera _camera;
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
-void MainWndRender(MainGui& Gui)
+void MainWndRender(const MainGui& Gui)
 {
-	switch (Gui.m_eBtnType)
+	if (curShowMode == SHOW2D)
 	{
-	case eCreateBox:
+		switch (m_eBtnType2D)
+		{
+		case eBizierCurve:
+		{
+			static BezierCurve line;
+			line.Render();
+		}
+		default:
+			break;
+		}
+	}
+	else
 	{
-		BoxObject box(10, 10, 10);
-		box.Render();
-		break;
+		switch (m_eBtnType3D)
+		{
+		case eCreateBox:
+		{
+			static BoxObject box(10, 10, 10);
+			box.Render();
+		}
+		default:
+			break;
+		}
 	}
-	case eClear:
-	{
-		Gui.m_eBtnType = eNone;
-		break;
-	}
-	default:
-		break;
-	}
 }
-void keyboardCallback(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		_camera.Move(MOVE_RIGHT);
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		_camera.Move(MOVE_LEFT);
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		_camera.Move(MOVE_FRONT);
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		_camera.Move(MOVE_BACK);
-}
-void mouseEventProcess(ImGuiIO& io)
-{
-	if (io.MouseDown[0])
-		std::cout << "left press" << std::endl;
-	if (io.MouseDown[1])
-		std::cout << "right press" << std::endl;
-}
-void MouseScrollEventProcess(GLFWwindow* window,double x,double y)
-{
-	if (y > 0)
-		_camera.MouseMidScroll(SCROLL_FRONT);
-	else 
-		_camera.MouseMidScroll(SCROLL_BACK);
-}
+
 int main(int, char**)
 {
     // Setup window
@@ -87,13 +75,16 @@ int main(int, char**)
     const char* glsl_version = "#version 130";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
+    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
+#endif
 
     // Create window with graphics context
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
     if (window == NULL)
         return 1;
     glfwMakeContextCurrent(window);
+	glfwSetMouseButtonCallback(window, processMouseInput);
     glfwSwapInterval(1); // Enable vsync
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -113,8 +104,8 @@ int main(int, char**)
 	//mouse scroll callback
 	glfwSetScrollCallback(window, MouseScrollEventProcess);
 	gCubeMap.initCubeMap();
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	MainGui mainGui("main");
+    ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
+	MainGui mainGui("Function list");
 	_camera.lookAt(glm::vec3(3.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -132,27 +123,52 @@ int main(int, char**)
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 	    //glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		//static float fRotAngle = 0.0f;  
+		//static float fRotAngle = 0.0f;
 		//fRotAngle += 0.5f;
 		//_viewMatrix = glm::rotate(viewMatrix,glm::radians(fRotAngle), glm::vec3(0.0f, 1.0f, 0.0f));
-		
+		//_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 100.0f);
 		_camera.update();
-		_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 100.0f);
-		
 		gCubeMap.Render();
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
-
 		ImGui::NewFrame();
+		
+	    //glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		//static float fRotAngle = 0.0f;
+		//fRotAngle += 0.5f;
+		//_viewMatrix = glm::rotate(viewMatrix,glm::radians(fRotAngle), glm::vec3(0.0f, 1.0f, 0.0f));
+		if (curShowMode == SHOWMODE::SHOW2D)
 		{
-			mainGui.show();
+			//_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 200.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			//_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 1000.0f);
+			_viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 1000.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 1000.0f);
+			
 		}
+		else
+		{
+			_viewMatrix = glm::lookAt(glm::vec3(3.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			_projectMatrix = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, 0.1f, 1000.0f);
 
+			gCubeMap.Render();
+		}
+		mainGui.show();
 		// Rendering
+		MainWndRender(mainGui);
+		const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 1100, main_viewport->WorkPos.y + 10), ImGuiCond_Always);
+		ImGui::SetNextWindowSize(ImVec2(150, 55), ImGuiCond_Always);
+		ImGui::Begin("Show Mode Select");
+		if (ImGui::Button("2D"))
+			curShowMode = SHOWMODE::SHOW2D;
+		ImGui::SameLine();
+		if (ImGui::Button("3D"))
+			curShowMode = SHOWMODE::SHOW3D;
+		ImGui::SameLine();
+		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		MainWndRender(mainGui);
         glfwSwapBuffers(window);
 		glfwPollEvents();
     }
